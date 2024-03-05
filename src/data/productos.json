@@ -1,0 +1,129 @@
+[
+  {
+    "id": 1,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Código del producto",
+    "price": 99.99,
+    "status": true,
+    "stock": 100,
+    "thumbnails": [
+      "ruta/imagen1.jpg",
+      "ruta/imagen2.jpg",
+      "ruta/imagen3.jpg"
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Updated Código del producto",
+    "price": 199.99,
+    "status": 100,
+    "stock": 100,
+    "thumbnails": [
+      "ruta/imagen1.jpg",
+      "ruta/imagen2.jpg",
+      "ruta/imagen3.jpg"
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Código del producto",
+    "price": 99.99,
+    "status": true,
+    "stock": 100
+  },
+  {
+    "id": 4,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Updated Código del producto",
+    "price": 199.99,
+    "status": 100,
+    "stock": 100
+  },
+  {
+    "id": 5,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Updated Código del producto",
+    "price": 199.99,
+    "status": 100,
+    "stock": 100
+  },
+  {
+    "id": 6,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Updated Código del producto",
+    "price": 199.99,
+    "status": false,
+    "stock": 100
+  },
+  {
+    "id": 7,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Updated Código del producto",
+    "price": 199.99,
+    "status": false,
+    "stock": 100
+  },
+  {
+    "id": 8,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Updated Código del producto",
+    "price": 199.99,
+    "status": true,
+    "stock": 100
+  },
+  {
+    "id": 9,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Updated Código del producto NUEVO",
+    "price": 199.99,
+    "status": false,
+    "stock": 100
+  },
+  {
+    "id": 10,
+    "title": "Nombre del producto",
+    "description": "Descripción del producto",
+    "code": "Updated Código del producto",
+    "price": 199.99,
+    "status": true,
+    "stock": 100
+  },
+  {
+    "id": 11,
+    "title": "Nuevo Producto",
+    "description": "Descripcion",
+    "code": "1",
+    "price": "1",
+    "status": true,
+    "stock": "1"
+  },
+  {
+    "id": 12,
+    "title": "Nuevo Producto",
+    "description": "Descripcion",
+    "code": "1",
+    "price": "1",
+    "status": true,
+    "stock": "1"
+  },
+  {
+    "id": 13,
+    "title": "Nuevo Producto",
+    "description": "Descripcion",
+    "code": "1",
+    "price": "1",
+    "status": true,
+    "stock": "1"
+  }
+]
