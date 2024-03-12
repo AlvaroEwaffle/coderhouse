@@ -48,9 +48,13 @@ exports.createProduct = (req, res) => {
     return res.status(400).json({ message: 'Todos los campos son requeridos' });
   }
   let { status } = req.body;
-
- // Check if status is provided and convert it to a boolean if necessary
- if (status !== undefined) {
+  //Check if code is unique
+  const product = products.find(p => p.code === code);
+  if (product) {
+    return res.status(400).json({ message: 'El Código ya existe' });
+  }
+  // Check if status is provided and convert it to a boolean if necessary
+  if (status !== undefined) {
     // Convert status to a boolean
     if (status === 'true' || status === true) {
       status = true;
