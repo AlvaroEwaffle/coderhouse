@@ -125,5 +125,113 @@
     "price": "1",
     "status": true,
     "stock": "1"
+  },
+  {
+    "id": 14,
+    "title": "Titulo",
+    "description": "Descripcion",
+    "code": "CODE",
+    "price": "123",
+    "status": true,
+    "stock": "2"
+  },
+  {
+    "id": 15,
+    "title": "Titulo",
+    "description": "Descripcion",
+    "code": "CODE",
+    "price": "123",
+    "status": true,
+    "stock": "2"
+  },
+  {
+    "id": 16,
+    "title": "Nuevo Producto",
+    "description": "Nuevo Producto",
+    "code": "XJCYBKN8",
+    "price": "100",
+    "status": true,
+    "stock": "5"
+  },
+  {
+    "id": 17,
+    "title": "Nuevo Producto",
+    "description": "Nuevo Producto",
+    "code": "XJCYBKN8",
+    "price": "100",
+    "status": true,
+    "stock": "5"
+  },
+  {
+    "id": 18,
+    "title": "Nuevo Producto!",
+    "description": "Nuevo Producto",
+    "code": "XJCYBKN8",
+    "price": "100",
+    "status": true,
+    "stock": "5"
+  },
+  {
+    "id": 19,
+    "title": "Nuevo Producto!",
+    "description": "Nuevo Producto",
+    "code": "XJCYBKN8",
+    "price": "100",
+    "status": true,
+    "stock": "5"
+  },
+  {
+    "id": 20,
+    "title": "Nuevo Producto enviado desde sockets",
+    "description": "Nuevo Producto",
+    "code": "XJCYBKN8",
+    "price": "100",
+    "status": true,
+    "stock": "5"
+  },
+  {
+    "id": 21,
+    "title": "Agregué un producto",
+    "description": "Descripcion",
+    "code": "XJCYBKN8",
+    "price": "100",
+    "status": true,
+    "stock": "2"
+  },
+  {
+    "id": 22,
+    "title": "23:05",
+    "description": "23:05",
+    "code": "23:05",
+    "price": "22",
+    "status": true,
+    "stock": "14"
+  },
+  {
+    "id": 23,
+    "title": "2307",
+    "description": "2307",
+    "code": "2307",
+    "price": "12",
+    "status": true,
+    "stock": "5"
+  },
+  {
+    "id": 24,
+    "title": "2307",
+    "description": "2307",
+    "code": "2307",
+    "price": "12",
+    "status": true,
+    "stock": "5"
+  },
+  {
+    "id": 25,
+    "title": "2310",
+    "description": "2307",
+    "code": "2307",
+    "price": "12",
+    "status": true,
+    "stock": "5"
   }
 ]

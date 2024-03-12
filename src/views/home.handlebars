@@ -1,0 +1,12 @@
+<h1>Home: Listado de productos</h1>
+    <ul id="realTimeProducts">
+        {{#each products}}
+        <li>
+            <strong>{{ title }}</strong>: {{ description }} - ${{ price }} - id: {{ id }}
+        </li>
+        {{/each}}
+    </ul>
+
+
+   <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/home.js"></script>

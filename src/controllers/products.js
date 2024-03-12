@@ -77,6 +77,9 @@ exports.createProduct = (req, res) => {
   };
   products.push(newProduct);
   saveProducts(products); // Guardar productos actualizados en el archivo
+  console.log('Se ha agregado un producto:', req.body);
+  const socketServer = req.app.get('socketio');
+  socketServer.emit('products', newProduct);
   res.status(201).json(newProduct);
 };
 

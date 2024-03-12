@@ -1,0 +1,41 @@
+<h1>Agrega un producto</h1>
+
+<div class="container mt-5">
+    <form id="productForm">
+        <div class="mb-3">
+            <label for="title" class="form-label">Título</label>
+            <input type="text" class="form-control" id="title" required>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Descripción</label>
+            <input type="text" class="form-control" id="description" required>
+        </div>
+        <div class="mb-3">
+            <label for="code" class="form-label">Código</label>
+            <input type="text" class="form-control" id="code" required>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Precio</label>
+            <input type="number" class="form-control" id="price" required>
+        </div>
+        <div class="mb-3">
+            <label for="stock" class="form-label">Stock</label>
+            <input type="number" class="form-control" id="stock" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar Producto</button>
+    </form>
+</div>
+
+<h1>Listado de productos en tiempo real</h1>
+<ul id="realTimeProducts">
+    {{#each products}}
+    <li>
+        <strong>{{ title }}</strong>: {{ description }} - ${{ price }} - id: {{ id }}
+    </li>
+    {{/each}}
+</ul>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realtimeproducts.js"></script>
+
