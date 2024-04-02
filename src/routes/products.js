@@ -8,7 +8,7 @@ const {
   createProduct,
   updateProduct,
   deleteProduct
-} = require('../controllers/products');
+} = require('../dao/mongodb/products.js');
 
 // Rutas
 router.get('/', getAllProducts);

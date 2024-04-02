@@ -2,7 +2,7 @@
     <ul id="realTimeProducts">
         {{#each products}}
         <li>
-            <strong>{{ title }}</strong>: {{ description }} - ${{ price }} - id: {{ id }}
+            <strong>{{ this.title }}</strong>: {{ this.description }} - ${{ this.price }} - id: {{ this._id }}
         </li>
         {{/each}}
     </ul>

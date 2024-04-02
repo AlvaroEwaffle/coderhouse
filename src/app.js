@@ -1,16 +1,26 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
 const path = require('path');
 const http = require('http');
-const socketIo = require('socket.io');
 const handlebars = require('express-handlebars');
+const socketIo = require('socket.io');
 const { Server } = require("socket.io");
 const app = express();
 const port = 8080;
+const mongoose = require('mongoose');
+const Product = require('./dao/models/Products.Model.js');
+let productlist = [];
+async function loadProducts(){
+try {
+  data = await Product.find();
+  const processedData = data.map(product => product.toObject());
+  productlist = processedData;
+  console.log(productlist);
+} catch (error) {
+  console.error('Error fetching products:', error);
+}}
 
-const PRODUCTS_FILE_PATH = path.join(__dirname, 'data', 'productos.json');
-const productlist = JSON.parse(fs.readFileSync(PRODUCTS_FILE_PATH, 'utf8'));
+loadProducts()
 
 // Middleware
 app.use(express.json());
@@ -21,11 +31,6 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'handlebars');
 app.engine('handlebars', handlebars.engine({ defaultLayout: 'main' }));
 
-// Crear la carpeta 'data' si no existe
-const dataDir = path.join(__dirname, 'data');
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir);
-}
 
 // Rutas
 const productsRouter = require('./routes/products');
@@ -58,3 +63,17 @@ socketServer.on('connection', (socket) => {
   console.log('Cliente conectado', socket.id);
   socket.on('disconnect', () => { console.log('Cliente desconectado', socket.id); });
 });
+
+mongoose.connect('mongodb+srv://alvaro:8PWQQG372stpjA1w@ecommerce.jlrgk9q.mongodb.net/?retryWrites=true&w=majority&appName=ecommerce', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log('Connected to MongoDB');
+})
+.catch((error) => {
+  console.error('Failed to connect to MongoDB:', error);
+});
+
+//alvaro
+//8PWQQG372stpjA1w

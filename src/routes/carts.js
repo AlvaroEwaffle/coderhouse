@@ -7,12 +7,12 @@ const {
   getCartById,
   addProductToCart,
   getAvailableCarts
-} = require('../controllers/carts');
+} = require('../dao/mongodb/carts.js');
 
 // Rutas
-router.post('/', createCart);
-router.get('/:cid', getCartById);
-router.post('/:cid/product/:pid', addProductToCart);
 router.get('/', getAvailableCarts);
+router.get('/:cid', getCartById);
+router.post('/', createCart);
+router.post('/:cid/product/:pid', addProductToCart);
 
 module.exports = router;

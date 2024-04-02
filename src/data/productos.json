@@ -233,5 +233,14 @@
     "price": "12",
     "status": true,
     "stock": "5"
+  },
+  {
+    "id": 26,
+    "title": "Prueba Codigo",
+    "description": "Descripcion",
+    "code": "XJCYBKN8423",
+    "price": "100",
+    "status": true,
+    "stock": "3"
   }
 ]

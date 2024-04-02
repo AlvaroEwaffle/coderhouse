@@ -169,7 +169,7 @@
       data.forEach(product => {
         const listItem = document.createElement('li');
         listItem.classList.add('list-group-item');
-        listItem.textContent = `Título: ${product.title}, Descripción: ${product.description}, Código: ${product.code}, Precio: ${product.price}, Stock: ${product.stock}`;
+        listItem.textContent = `ID: ${product._id}, Título: ${product.title}, Descripción: ${product.description}, Código: ${product.code}, Precio: ${product.price}, Stock: ${product.stock}`;
         productList.appendChild(listItem);
       });
     })
