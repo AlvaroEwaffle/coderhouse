@@ -1,0 +1,95 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        #chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        #message-container {
+            height: 10vh;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        #message-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #message-list li {
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+
+        #message-form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #message-user,
+        #message-input {
+            flex: 1;
+            margin-right: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        #send-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #message-history {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        #message-history li {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="chat-container">
+        <div id="message-container">
+            <h2>Chat Application</h2>
+        </div>
+        <form id="message-form">
+            <input type="text" id="message-user" placeholder="Your username">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button type="submit" id="send-button">Send</button>
+        </form>
+    </div>
+
+    <ul id="message-list">
+        {{#each messages}}
+        <li>{{this.user}}: {{this.text}}</li>
+        {{/each}}
+    </ul>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/chat.js"></script>
+</body>

@@ -9,17 +9,19 @@ const app = express();
 const port = 8080;
 const mongoose = require('mongoose');
 const Product = require('./dao/models/Products.Model.js');
+const Message = require('./dao/models/messages.Model.js');
+
 let productlist = [];
+//Load Product List
 async function loadProducts(){
 try {
   data = await Product.find();
   const processedData = data.map(product => product.toObject());
   productlist = processedData;
-  console.log(productlist);
+ // console.log(productlist);
 } catch (error) {
   console.error('Error fetching products:', error);
 }}
-
 loadProducts()
 
 // Middleware
@@ -43,8 +45,25 @@ app.get('/', (req, res) => {
   res.render('home', { products: productlist });
 });
 
-app.get('/realtimeproducts', (_, res) => {
+app.get('/realtimeproducts', (req, res) => {
   res.render('realTimeProducts', { products: productlist });
+});
+
+//Load Chat List
+let messagelist = [];
+async function loadmessagelist(){
+  try {
+    data = await Message.find().sort({ timestamp: -1 });
+    const processedData = data.map(message => message.toObject());
+    messagelist = processedData;
+   // console.log(productlist);
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  }}
+  loadmessagelist()
+
+app.get('/chat', (req, res) => {
+  res.render('chat', { messages: messagelist });
 });
 
 // //Declare public folder
@@ -62,6 +81,16 @@ app.set('socketio', socketServer);
 socketServer.on('connection', (socket) => {
   console.log('Cliente conectado', socket.id);
   socket.on('disconnect', () => { console.log('Cliente desconectado', socket.id); });
+  //Proceso y guarda mensajes
+  socket.on('chatMessage', (message) => {
+    socketServer.emit('newMessage', message);    
+    console.log(message);
+    Message.create({
+      user: message.user,
+      text: message.text
+    })
+    loadProducts();
+  })
 });
 
 mongoose.connect('mongodb+srv://alvaro:8PWQQG372stpjA1w@ecommerce.jlrgk9q.mongodb.net/?retryWrites=true&w=majority&appName=ecommerce', {

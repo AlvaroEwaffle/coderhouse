@@ -62,6 +62,8 @@ exports.createProduct = async (req, res) => {
     await newProduct.save();
 
     console.log('Se ha agregado un producto:', newProduct);
+    const socketServer = req.app.get('socketio');
+    socketServer.emit('products', newProduct);
     res.status(201).json(newProduct);
   } catch (error) {
     console.error('Error al agregar un producto:', error);

@@ -31,9 +31,8 @@ exports.getCartById = async (req, res) => {
 
 exports.addProductToCart = async (req, res) => {
     try {
-        
-        const productId = parseInt(req.params.pid);
-        const quantity = parseInt(req.body.quantity) || 1;
+        const productId = req.params.pid;
+        const quantity = req.body.quantity || 1;
             //const product = await Product.findById(req.params.pid);
         const cart = await Cart.findById(req.params.cid);
         if (!cart) {
@@ -41,9 +40,11 @@ exports.addProductToCart = async (req, res) => {
         }
         
         const existingProductIndex = cart.products.findIndex(item => item.productId === productId);
+        console.log(existingProductIndex);
         if (existingProductIndex !== -1) {
             cart.products[existingProductIndex].quantity += quantity;
         } else {
+            console.log(productId);
             cart.products.push({ productId, quantity });
         }
         
@@ -64,3 +65,17 @@ exports.getAvailableCarts = async (req, res) => {
         res.status(500).json({ message: 'Error interno del servidor' });
     }
 };
+
+//Delete Cart
+exports.deleteCart = async (req, res) => {
+    try {
+        const cart = await Cart.findByIdAndDelete(req.params.cid);
+        if (!cart) {
+            return res.status(404).json({ message: 'Carrito no encontrado' });
+        }
+        res.json(cart);
+    } catch (error) {
+        console.error('Error al eliminar el carrito:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+}
