@@ -49,6 +49,16 @@ app.get('/realtimeproducts', (req, res) => {
   res.render('realTimeProducts', { products: productlist });
 });
 
+// Ruta para mostrar todos los productos con paginación
+app.get('/products', (req, res) => {
+  res.render('products', { products: productlist });
+});
+
+// Ruta para mostrar un carrito específico
+app.get('/carts/:cid', (req, res) => {
+  res.render('getCartByIdView', {cart: cart});
+});
+
 //Load Chat List
 let messagelist = [];
 async function loadmessagelist(){

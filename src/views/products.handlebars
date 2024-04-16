@@ -1,0 +1,16 @@
+<h1>Lista de Productos</h1>
+{{#each products}}
+  <div class="product">
+    <h2>{{title}}</h2>
+    <p>{{description}}</p>
+    <p>Precio: {{price}}</p>
+    <p>Categoría: {{category}}</p>
+    <!-- Botón para ver detalles del producto -->
+    <a href="/products/{{_id}}">Ver Detalles</a>
+    <!-- Botón para agregar al carrito -->
+    <form action="/carts/add" method="post">
+      <input type="hidden" name="productId" value="{{_id}}">
+      <button type="submit">Agregar al Carrito</button>
+    </form>
+  </div>
+{{/each}}
