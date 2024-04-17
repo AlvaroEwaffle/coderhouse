@@ -9,7 +9,9 @@ const app = express();
 const port = 8080;
 const mongoose = require('mongoose');
 const Product = require('./dao/models/Products.Model.js');
+const Cart = require('./dao/models/Carts.Model.js');
 const Message = require('./dao/models/messages.Model.js');
+
 
 let productlist = [];
 //Load Product List
@@ -55,8 +57,11 @@ app.get('/products', (req, res) => {
 });
 
 // Ruta para mostrar un carrito específico
-app.get('/carts/:cid', (req, res) => {
-  res.render('getCartByIdView', {cart: cart});
+app.get('/carts/:cid', async (req, res) => {
+  //Find Cart
+  const cart = await Cart.findById(req.params.cid).populate('products.product').lean();
+  console.log(cart); 
+  res.render('getCartByIdView', { cart: cart });
 });
 
 //Load Chat List

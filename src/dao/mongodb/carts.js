@@ -46,7 +46,12 @@ exports.getCartById = async (req, res) => {
 //FIX
 exports.addProductToCart = async (req, res) => {
     try {
-        const quantity = req.body.quantity || 1; // Default quantity is 1 if not provided
+        let quantity = req.body.quantity || 1; // Default quantity is 1 if not provided
+        //validate if quantity is a number or transform to it 
+        if (typeof quantity !== 'number') {
+            //transform quantity to number
+            quantity = Number(quantity);
+        }
         const cart = await Cart.findById(req.params.cid);
         const product = await Product.findById(req.params.pid);
 

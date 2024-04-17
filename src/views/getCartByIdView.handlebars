@@ -1,0 +1,11 @@
+<h1>Carrito de Compras</h1>
+{{#each cart.products}}
+<!-- Access properties of each product here -->
+<p>Product ID: {{this.product._id}}</p>
+<p>Product Title: {{this.product.title}}</p>
+<p>Product Description: {{this.product.description}}</p>
+<p>Product Code: {{this.product.code}}</p>
+<p>Product Price: {{this.product.price}}</p>
+<p>Product Quantity: {{this.quantity}}</p>
+-------------------------------------
+{{/each}}
