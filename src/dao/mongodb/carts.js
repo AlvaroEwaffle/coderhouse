@@ -87,7 +87,7 @@ exports.addProductToCart = async (req, res) => {
 
 exports.getAvailableCarts = async (req, res) => {
     try {
-        const carts = await Cart.find().populate('products');
+        const carts = await Cart.find().populate('products.product').lean();
         res.json(carts);
     } catch (error) {
         console.error('Error al obtener los carritos disponibles:', error);

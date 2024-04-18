@@ -114,8 +114,9 @@ exports.deleteProduct = async (req, res) => {
 
 // Controlador para obtener todos los productos con opciones de paginación, ordenamiento y consulta
 exports.getAllProducts = async (req, res) => {
+  console.log("Query Params", req.query);
   try {
-    let { limit = 5, page = 1, sort, query } = req.query;
+    let { limit = 5, page = 1, sort, title, price, code, query } = req.query;
 
     // Convertir limit y page a números enteros
     limit = parseInt(limit);
@@ -132,6 +133,17 @@ exports.getAllProducts = async (req, res) => {
       filter = JSON.parse(query); // Convertir el string de consulta JSON a objeto
     }
 
+    // Agregar filtros adicionales si se proporcionan en la URL
+    if (title) {
+      filter.title = { $regex: title, $options: 'i' }; // Buscar títulos que coincidan parcialmente (ignorar mayúsculas y minúsculas)
+    }
+    if (price) {
+      filter.price = price; // Filtrar por precio
+    }
+    if (code) {
+      filter.code = { $regex: code, $options: 'i' }; // Buscar códigos que coincidan parcialmente (ignorar mayúsculas y minúsculas)
+    }
+    console.log("Filters", filter);
     // Realizar la consulta a la base de datos con los filtros, paginación y ordenamiento
     let products;
     if (sort === 'asc') {
@@ -170,11 +182,10 @@ exports.getAllProducts = async (req, res) => {
       nextLink: page < Math.ceil(totalProducts / limit) ? `${req.protocol}://${req.get('host')}${req.baseUrl}?page=${page + 1}&limit=${limit}` : null
     };
 
-
-    // Enviar respuesta al cliente
     res.json(response);
   } catch (error) {
     console.error('Error al obtener los productos:', error);
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
+
