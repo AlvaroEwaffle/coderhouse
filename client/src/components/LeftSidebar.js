@@ -1,8 +1,45 @@
 // LeftSidebar.js
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate} from 'react-router-dom';
+import axios from 'axios';
+
 
 const LeftSidebar = () => {
+  const [name, setName] = useState('');
+  const [usertype, setUsertype] = useState('');
+  const navigate = useNavigate();
+
+  //Useffect
+  useEffect(() => {
+    axios.get('http://localhost:8080/api/sessions/validate')
+      .then(response => {
+        console.log(response.data)
+        if (response.data.valid) {
+          setName(response.data.user)
+          setUsertype(response.data.userType)
+        } else {
+          console.log("No hay sesión activa")
+          navigate('/login')
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  }, []); // Fetch products when filters change
+
+  const handleLogout = () => {
+    // Aquí puedes hacer una solicitud al servidor para cerrar sesión
+    // Por ejemplo, una solicitud para eliminar la sesión del usuario
+    axios.get('http://localhost:8080/api/sessions/logout')
+      .then(() => {
+        navigate('/login');
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  };
+
+
   return (
     <div className="left-sidebar">
       <ul>
@@ -12,9 +49,16 @@ const LeftSidebar = () => {
         <li>
           <Link to="/carts">Cart List</Link>
         </li>
+        {usertype === 'admin' && (
         <li>
           <Link to="/create-product">Create Product</Link>
+        </li>  
+        )}
+        {usertype && (
+        <li>
+          <button onClick={handleLogout}>Logout</button>
         </li>
+        )}
       </ul>
     </div>
   );

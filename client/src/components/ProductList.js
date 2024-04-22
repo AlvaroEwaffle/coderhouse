@@ -1,13 +1,33 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ProductList = () => {
+  const [name, setName] = useState('');
+  const [usertype, setUsertype] = useState('');
   const [products, setProducts] = useState([]);
   const [carts, setCarts] = useState([]);
   const [selectedCart, setSelectedCart] = useState('');
   const [pagination, setPagination] = useState({});
   const [filters, setFilters] = useState({});
+  const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
 
   useEffect(() => {
+    axios.get('http://localhost:8080/api/sessions/validate')
+      .then(response => {
+        console.log(response.data)
+        if (response.data.valid) {
+          setName(response.data.user)
+          setUsertype(response.data.userType)
+        } else {
+          console.log("No hay sesión activa")
+          navigate('/login')
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
     fetchProducts();
     fetchCarts();
   }, [filters]); // Fetch products when filters change
@@ -44,7 +64,7 @@ const ProductList = () => {
   };
 
   const handleAddToCart = async (productId) => {
-  
+
     try {
       const response = await fetch(`http://localhost:8080/api/carts/${selectedCart}/product/${productId}`, {
         method: 'POST',
@@ -118,7 +138,7 @@ const ProductList = () => {
 
   return (
     <div>
-      <h1>Products Page</h1>
+      <h1>Products Page: {name} Rol: {usertype}</h1>
       {/* Filter Form */}
       <form onSubmit={handleSubmit}>
         <input type="text" name="title" placeholder="Title" />
@@ -144,7 +164,7 @@ const ProductList = () => {
             </select>
           </div>
         ))}
-  
+
 
       </div>
 

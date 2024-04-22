@@ -62,8 +62,6 @@ exports.createProduct = async (req, res) => {
     await newProduct.save();
 
     console.log('Se ha agregado un producto:', newProduct);
-    const socketServer = req.app.get('socketio');
-    socketServer.emit('products', newProduct);
     res.status(201).json(newProduct);
   } catch (error) {
     console.error('Error al agregar un producto:', error);
@@ -114,7 +112,7 @@ exports.deleteProduct = async (req, res) => {
 
 // Controlador para obtener todos los productos con opciones de paginación, ordenamiento y consulta
 exports.getAllProducts = async (req, res) => {
-  console.log("Query Params", req.query);
+
   try {
     let { limit = 5, page = 1, sort, title, price, code, query } = req.query;
 
@@ -143,7 +141,7 @@ exports.getAllProducts = async (req, res) => {
     if (code) {
       filter.code = { $regex: code, $options: 'i' }; // Buscar códigos que coincidan parcialmente (ignorar mayúsculas y minúsculas)
     }
-    console.log("Filters", filter);
+
     // Realizar la consulta a la base de datos con los filtros, paginación y ordenamiento
     let products;
     if (sort === 'asc') {

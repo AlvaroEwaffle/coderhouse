@@ -37,6 +37,22 @@ const CartList = () => {
     }
   };
 
+  const handleRemoveFromCart = async (cartId, productId) => {
+    try {
+      const response = await fetch(`http://localhost:8080/api/carts/${cartId}/product/${productId}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        // If the product is successfully removed from the cart, update the cart list
+        fetchCarts();
+      } else {
+        console.error('Failed to remove product from cart:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error removing product from cart:', error);
+    }
+  };
+
   const handleDeleteCart = async (cartId) => {
     try {
       const response = await fetch(`http://localhost:8080/api/carts/${cartId}`, {
@@ -66,12 +82,16 @@ const CartList = () => {
                 cart.products.map(product => (
                   <li key={product._id}>
                     Product ID: {product._id}, Title: {product.title}, Quantity: {product.quantity}
+                    <br /><br />
+                    <button onClick={() => handleRemoveFromCart(cart._id, product._id)}>Remove from Cart</button>
+                    <br /><br />
                   </li>
                 ))
               ) : (
                 <li>No products in this cart</li>
               )}
-              <button onClick={() => handleDeleteCart(cart._id)}>Delete</button>
+              <br />
+              <button onClick={() => handleDeleteCart(cart._id)}>Delete Cart</button>
             </ul>
           </li>
         ))}

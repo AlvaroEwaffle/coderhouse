@@ -111,9 +111,11 @@ exports.deleteCart = async (req, res) => {
 //NEW ENDPOINTS
 // DELETE /api/carts/:cid/products/:pid to delete a product from the cart
 exports.deleteProductFromCart = async (req, res) => {
+    console.log("Delete Product from cart", req.params);
     try {
         const { cid, pid } = req.params;
-        const cart = await Cart.findByIdAndUpdate(cid, { $pull: { products: { productId: pid } } }, { new: true });
+        const cart = await Cart.findByIdAndUpdate(cid, { $pull: { products: { _id: pid } } }, { new: true });
+        console.log("Cart:", cart);
         res.json(cart);
     } catch (error) {
         console.error('Error al eliminar producto del carrito:', error);
