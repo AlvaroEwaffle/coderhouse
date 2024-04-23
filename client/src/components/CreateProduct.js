@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import validateSession from '../utils/validatesession.js'; // 
+import { useNavigate } from 'react-router-dom';
+
 
 const CreateProduct = () => {
+  const [name, setName] = useState('');
+  const [usertype, setUsertype] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -8,7 +13,16 @@ const CreateProduct = () => {
     price: 0,
     stock: 0
   });
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    validateSession(setName, setUsertype, navigate);
+    //If usertype is not admin, redirect to home
+    if (usertype !== 'admin') {
+      console.log('Not admin user, redirecting to product list page');
+      navigate('/productlist');
+    }
+  }, []); // 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
