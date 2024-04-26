@@ -1,6 +1,6 @@
 // LeftSidebar.js
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate} from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -14,7 +14,7 @@ const LeftSidebar = () => {
       .then(response => {
         if (response.data.valid) {
           setUsertype(response.data.userType)
-        } 
+        }
       })
       .catch(error => {
         console.log(error)
@@ -38,20 +38,23 @@ const LeftSidebar = () => {
     <div className="left-sidebar">
       <ul>
         <li>
-          <Link to="/productlist">Product List</Link>
-        </li>
-        <li>
-          <Link to="/carts">Cart List</Link>
+          <Link to="/login">Log In</Link>
         </li>
         {usertype === 'admin' && (
-        <li>
-          <Link to="/create-product">Create Product</Link>
-        </li>  
+          <li>
+            <Link to="/create-product">Create Product</Link>
+          </li>
         )}
         {usertype && (
-        <li>
-          <button onClick={handleLogout}>Logout</button>
-        </li>
+          <li>
+            <button onClick={handleLogout}>Logout</button>
+          </li> &&
+          (<li>
+            <Link to="/productlist">Product List</Link>
+          </li>) &&
+          (<li>
+            <Link to="/productlist">Product List</Link>
+          </li>)
         )}
       </ul>
     </div>
