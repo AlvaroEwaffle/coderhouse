@@ -9,6 +9,8 @@ const schema = new mongoose.Schema({
         unique: false
     },
     password: String,
+    githubId: String, 
+    username: String
 })
 
 module.exports = mongoose.model('User', schema, 'users')

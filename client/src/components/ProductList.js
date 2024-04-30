@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import validateSession from '../utils/validatesession.js'; // Assuming the file is in the same directory
+import validateSession from '../utils/validatesession.js'; 
 
 
 const ProductList = () => {
@@ -16,7 +16,7 @@ const ProductList = () => {
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    validateSession(setName, setUsertype, navigate);
+    //validateSession(setName, setUsertype, navigate);
     fetchProducts();
     fetchCarts();
   }, [filters]); // Fetch products when filters change

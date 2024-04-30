@@ -1,15 +1,20 @@
 const { Router } = require('express')
 const User = require('../dao/models/User.Model')
 const router = Router()
+//Import utils.js
+const {hashPassword, isValidPassword} = require('../utils/bcrypt.js')
+const passport = require('passport');
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body
     // 1. verificar que el usuario exista en la BD
-    const user = await User.findOne({ email, password })
+    const user = await User.findOne({ email })
     if (!user) {
-        return res.status(400).send({ Login: false })
+        return res.status(401).send({ Login: false })
     }
     // 2. crear nueva sesión si el usuario existe
+    if(!isValidPassword(user, password)) {res.status(403).send({ Login: false })}
+    delete user.password
     req.session.user = user.email
     console.log("User:", req.session.user)
     // Res status ok and redirect to index
@@ -25,7 +30,7 @@ router.post('/register', async (req, res) => {
             lastName,
             age: +age,
             email,
-            password
+            password: hashPassword(password)
         })
         console.log('User created!')
         res.status(201).send('User created!')
@@ -71,6 +76,30 @@ router.get('/logout', (req, res) => {
       }
     });
   });
+
+  // Ruta para iniciar la autenticación con GitHub
+router.get('/github', passport.authenticate('github'));
+
+// Ruta de callback después de la autenticación con GitHub
+router.get('/github/callback',
+    passport.authenticate('github', { failureRedirect: '/login' }),
+    (req, res) => {
+        // Redirigir al usuario después de la autenticación exitosa
+        res.redirect('http://localhost:3000/productlist');
+    });
+
+// Ejemplo de ruta protegida
+router.get('/profile', ensureAuthenticated, (req, res) => {
+    res.send('Welcome to your profile');
+});
+
+// Middleware para verificar la autenticación del usuario
+function ensureAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    res.send('User not autenticated');
+}
 
 
 module.exports = router

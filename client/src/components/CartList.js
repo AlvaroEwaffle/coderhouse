@@ -1,10 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import validateSession from '../utils/validatesession.js'; 
+import { useNavigate } from 'react-router-dom';
 
 const CartList = () => {
   const [carts, setCarts] = useState([]);
+  const [name, setName] = useState('');
+  const [usertype, setUsertype] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
+    validateSession(setName, setUsertype, navigate);
     fetchCarts();
+
   }, []);
 
   const fetchCarts = async () => {

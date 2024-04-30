@@ -37,25 +37,27 @@ const LeftSidebar = () => {
   return (
     <div className="left-sidebar">
       <ul>
+      {!usertype && (
         <li>
           <Link to="/login">Log In</Link>
-        </li>
+        </li>)}
         {usertype === 'admin' && (
           <li>
             <Link to="/create-product">Create Product</Link>
           </li>
         )}
-        {usertype && (
-          <li>
+        {usertype &&
+          (<li>
+            <Link to="/productlist">Product List</Link>
+          </li>) }
+          {usertype &&           
+          (<li>
+            <Link to="/carts">Cart List</Link>
+          </li>) }
+          {usertype &&
+          (<li>
             <button onClick={handleLogout}>Logout</button>
-          </li> &&
-          (<li>
-            <Link to="/productlist">Product List</Link>
-          </li>) &&
-          (<li>
-            <Link to="/productlist">Product List</Link>
-          </li>)
-        )}
+          </li>)}
       </ul>
     </div>
   );
