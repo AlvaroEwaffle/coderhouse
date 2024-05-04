@@ -10,7 +10,7 @@ const LeftSidebar = () => {
 
   //Useffect
   useEffect(() => {
-    axios.get('http://localhost:8080/api/sessions/validate')
+    axios.post('http://localhost:8080/api/sessions/validate')
       .then(response => {
         if (response.data.valid) {
           setUsertype(response.data.userType)

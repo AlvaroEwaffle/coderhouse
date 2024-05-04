@@ -16,7 +16,7 @@ const ProductList = () => {
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    //validateSession(setName, setUsertype, navigate);
+    validateSession(setName, setUsertype, navigate);
     fetchProducts();
     fetchCarts();
   }, [filters]); // Fetch products when filters change

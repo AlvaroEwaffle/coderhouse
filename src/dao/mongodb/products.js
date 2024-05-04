@@ -112,7 +112,6 @@ exports.deleteProduct = async (req, res) => {
 
 // Controlador para obtener todos los productos con opciones de paginación, ordenamiento y consulta
 exports.getAllProducts = async (req, res) => {
-
   try {
     let { limit = 5, page = 1, sort, title, price, code, query } = req.query;
 

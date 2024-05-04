@@ -16,13 +16,20 @@ const CreateProduct = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    validateSession(setName, setUsertype, navigate);
-    //If usertype is not admin, redirect to home
-    if (usertype !== 'admin') {
-      console.log('Not admin user, redirecting to product list page');
-      navigate('/productlist');
-    }
-  }, []); // 
+    const fetchUserType = async () => {
+      await validateSession(setName, setUsertype, navigate);
+      console.log("Create Product usertype:", usertype);
+      // If usertype is not admin, redirect to home
+      if (usertype !== 'admin') {
+        console.log('Not admin user, redirecting to product list page');
+        navigate('/productlist');
+      }
+    };
+
+    fetchUserType();
+  }, [ ]);
+
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });

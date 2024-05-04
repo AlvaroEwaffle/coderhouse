@@ -9,7 +9,6 @@ const initializePassport = () => {
         callbackURL: "http://localhost:8080/api/sessions/github/callback"
     },
     async (accessToken, refreshToken, profile, done) => {
-        console.log(profile);
         // Check if the user exists in your database
         let user = await User.findOne({ githubId: profile.id });
         if (!user) {
@@ -28,6 +27,8 @@ const initializePassport = () => {
         const user = await User.findById(id);
         done(null, user);
     });
+
+
 };
 
 module.exports = initializePassport;
