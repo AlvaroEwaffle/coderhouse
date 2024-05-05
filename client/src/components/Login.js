@@ -10,19 +10,20 @@ const LoginPage = ({ }) => {
     axios.defaults.withCredentials = true;
 
     useEffect(() => {
-        axios.post('http://localhost:8080/api/sessions/validate')
+        axios.get('http://localhost:8080/api/sessions/current')
             .then(response => {
                 console.log(response.data)
-                if (response.data.valid) {
+                if (response.data.role) {
+                    console.log("Sesión activa, redireccionando")
                     navigate('/productlist')
                 } else {
                     console.log("No hay sesión activa")
                 }
             })
             .catch(error => {
-                console.log(error)
+                console.log("No hay sesión activa")
             })
-    }, []); // Fetch products when filters change
+    }, []);
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);

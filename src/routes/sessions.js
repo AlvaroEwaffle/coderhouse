@@ -1,133 +1,105 @@
 const { Router } = require('express')
 const User = require('../dao/models/User.Model')
+const Cart = require('../dao/models/Carts.Model')
 const router = Router()
-//Import utils.js
-const { hashPassword, isValidPassword } = require('../utils/bcrypt.js')
-const passport = require('passport');
 const jwt = require('jsonwebtoken');
-const secretKey = 'tu_clave_secreta';
+const { hashPassword, isValidPassword } = require('../utils/bcrypt.js')
+const passport = require("passport");
+const { generateToken } = require('../utils/jwt')
 
 router.post('/login', async (req, res) => {
-    console.log(req.body)
-    const { email, password } = req.body
-    // 1. verificar que el usuario exista en la BD
-    const user = await User.findOne({ email })
-    if (!user) {
-        return res.status(401).send({ Login: false })
-    }
-    // 2. crear nueva sesión si el usuario existe
-    if (!isValidPassword(user, password)) { res.status(403).send({ Login: false }) }
-    delete user.password
-    console.log(user)
-    const token = generateToken(user);
-    console.log("User Token:", token)
-    // Set JWT token as a cookie
-    res.cookie('jwt', token, { httpOnly: true, maxAge: 60000 }); // Max age is in milliseconds (1 minute)
-    // Res status ok and redirect to index
-    res.status(200).send({ Login: true })
-})
+    const { email, password } = req.body;
 
-router.post('/register', async (req, res) => {
-    console.log(req.body)
-    const { firstName, lastName, email, age, password } = req.body
     try {
-        await User.create({
-            firstName,
-            lastName,
-            age: +age,
-            email,
-            password: hashPassword(password)
-        })
-        console.log('User created!')
-        res.status(201).send('User created!')
-    }
-    catch (err) {
-        console.log(err)
-        res.status(400).send('Error creating user!')
-    }
-})
+        // Verify if the user exists in the database
+        const user = await User.findOne({ email });
 
-//Validate session
-router.post('/validate', async (req, res) => {
-    try {
-        const token = req.cookies.jwt;
-        console.log("User Token:", token)
-        const jwtToken = req.cookies.jwt;
-        //Si no viene token, devuelve error
-        if (!jwtToken) {
-            console.log("No token provided");
-            res.json({ valid: false });
-            return;
-        }
-        // Verify and decode the JWT token
-        let decodedToken;
-        try {
-            decodedToken = jwt.verify(jwtToken, secretKey);
-            console.log('Decoded token:', decodedToken);
-        } catch (error) {
-            console.log('Error decoding token:', error);
-            return res.json({ valid: false });
-        }
-        // Check if the decoded token has email
-        const userEmail = decodedToken.email;
-        if (!userEmail) {
-            console.log("Email not found");
+        // If the user doesn't exist, return a 401 Unauthorized response
+        if (!user) {
+            return res.status(401).json({ message: 'User not found' });
         }
 
-        // Determine user type based on email
-        const userType = (userEmail === 'adminCoder@coder.com') ? 'admin' : 'usuario';
+        // Verify if the password is correct
+        if (!isValidPassword(user, password)) {
+            return res.status(401).json({ message: 'Invalid password' });
+        }
 
-        // Return response with valid status and user data
-        res.json({ valid: true, user: decodedToken.username, userType });
-    }
-    catch (error) {
-        console.error('Error validating session:', error);
+        const credentials = { id: user._id.toString(), email: user.email, role: user.role, cart: user.cart };
+        const accessToken = generateToken(credentials)
+        res.cookie('accessToken', accessToken, { maxAge: 60 * 1000, httpOnly: true })
+
+        // Send a success response
+        res.status(200).json({ message: 'Login successful' });
+    } catch (error) {
+        // If an error occurs, return a 500 Internal Server Error response
+        console.error('Login error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
 
-// Definir la ruta de logout
-router.get('/logout', (req, res) => {
-    // Clear the JWT token cookie
-    res.clearCookie('jwt');
-    console.log("Logout realizado")
-    // Send a success response
-    res.status(200).send('Sesión cerrada con éxito');
+router.post('/register', async (req, res) => {
+    const { firstName, lastName, email, age, password } = req.body;
+
+    try {
+        // Check if the user already exists in the database
+        const existingUser = await User.findOne({ email });
+
+        // If the user already exists, return a 409 Conflict response
+        if (existingUser) {
+            return res.status(409).json({ message: 'User already exists' });
+        }
+
+        // Create a cart for the user
+        const newCart = await Cart.create({ /* cart properties */ });
+
+        // Create a new user in the database
+        await User.create({
+            firstName,
+            lastName,
+            email,
+            age,
+            cart: newCart._id,
+            password: hashPassword(password)
+        });
+        console.log('User created!')
+        // Send a success response
+        res.status(201).json({ message: 'User created successfully' });
+    } catch (error) {
+        // If an error occurs, return a 500 Internal Server Error response
+        console.error('Registration error:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 });
 
 // Ruta para iniciar la autenticación con GitHub
 router.get('/github', passport.authenticate('github'));
 
 // Ruta de callback después de la autenticación con GitHub
-router.get('/github/callback',
-    passport.authenticate('github', { failureRedirect: '/login' }),
-    (req, res) => {
-        const token = generateToken(req.user);
-        // Set JWT token as a cookie
-        res.cookie('jwt', token, { httpOnly: true, maxAge: 60000 }); // Max age is in milliseconds (1 minute)
-        // Redirect the user after successful authentication
-        res.redirect('http://localhost:3000/productlist');
+router.get('/github/callback', passport.authenticate('github', { failureRedirect: '/login' }), (req, res) => {
+    console.log("Callback User", req.user)
+    // Generate and pass Token
+    const credentials = { id: req.user._id.toString(), email: req.user.username, role: req.user.role };
+    const accessToken = generateToken(credentials)
+    res.cookie('accessToken', accessToken, { httpOnly: true, maxAge: 60000 }); // Max age is in milliseconds (1 minute)
+    // Redirect the user after successful authentication
+    res.redirect('http://localhost:3000/productlist');
 
-    });
-
-// Ejemplo de ruta protegida
-router.get('/profile', async (req, res) => {
-    console.log("User Session:", req.session)
-    res.send('Welcome to your profile');
 });
 
-// Función para generar un token JWT
-const generateToken = (userData) => {
-    const payload = {
-        userId: userData._id,
-        username: userData.username,
-        email: userData.email
-        // Puedes incluir más información del usuario aquí si es necesario
-    };
-    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' }); // El token expira en 1 hora
-    return token;
-};
+
+//router.get('/current', verifyToken, (req, res) => {
+router.get('/current', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    return res.json(req.user)
+});
 
 
+// Logout route
+router.get('/logout', (req, res) => {
+    // Clear the JWT token cookie
+    res.clearCookie('accessToken');
+    // Send a success response
+    res.status(200).send('Sesión cerrada con éxito');
+});
 
-module.exports = router
+
+module.exports = router;

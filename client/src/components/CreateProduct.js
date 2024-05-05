@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import validateSession from '../utils/validatesession.js'; // 
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const CreateProduct = () => {
   const [name, setName] = useState('');
@@ -14,20 +14,29 @@ const CreateProduct = () => {
     stock: 0
   });
   const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    const fetchUserType = async () => {
-      await validateSession(setName, setUsertype, navigate);
-      console.log("Create Product usertype:", usertype);
-      // If usertype is not admin, redirect to home
-      if (usertype !== 'admin') {
-        console.log('Not admin user, redirecting to product list page');
-        navigate('/productlist');
-      }
-    };
-
-    fetchUserType();
-  }, [ ]);
+    axios.get('http://localhost:8080/api/sessions/current')
+      .then(response => {
+        if (response.data.role) {
+          console.log("Create Product usertype:", response.data.role);
+          setUsertype(response.data.role)
+          if (response.data.role !== 'admin') {
+            console.log('Not admin user, redirecting to product list page');
+            navigate('/productlist');
+          }
+        }
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 401) {
+          console.log("Unauthorized, redirecting to login");
+          navigate('/login');
+        } else {
+          console.log("Error:", error);
+        }
+      })
+  }, []);
 
 
   const handleChange = (e) => {
@@ -38,21 +47,22 @@ const CreateProduct = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8080/api/products', {
-        method: 'POST',
+      const response = await axios.post('http://localhost:8080/api/products', {
+        formData
+      },{
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
       });
-      if (response.ok) {
-        console.log('Product created successfully');
-        // Optionally, you can redirect the user to another page or perform any other action
+
+      if (response.status === 201) {
+        toast.success('Product created successfully')
+
       } else {
-        console.error('Failed to create product');
+        toast.error('Failed to create product')
       }
     } catch (error) {
-      console.error('Error creating product:', error);
+      toast.error('Failed to create product')
     }
   };
 

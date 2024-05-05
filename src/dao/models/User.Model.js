@@ -9,7 +9,9 @@ const schema = new mongoose.Schema({
         unique: false
     },
     password: String,
-    githubId: String, 
+    role: { type: String, default: 'user' },
+    cart: { type: mongoose.Schema.Types.ObjectId, ref: 'Cart' },
+    githubId: String,
     username: String
 })
 

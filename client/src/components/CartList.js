@@ -1,16 +1,37 @@
 import React, { useState, useEffect } from 'react';
 import validateSession from '../utils/validatesession.js'; 
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const CartList = () => {
   const [carts, setCarts] = useState([]);
   const [name, setName] = useState('');
   const [usertype, setUsertype] = useState('');
   const navigate = useNavigate();
+  axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    validateSession(setName, setUsertype, navigate);
-    fetchCarts();
+    axios.get('http://localhost:8080/api/sessions/current')
+    .then(response => {
+      console.log("Validate Session Response Data:", response.data);
+      if (response.data.role) {
+        setName(response.data.email);
+        setUsertype(response.data.role);
+        fetchCarts();
+      } else {
+        console.log("Usuario sin rol?");
+        navigate('/login');
+      }
+    })
+    .catch(error => {
+      if (error.response && error.response.status === 401) {
+        console.log("Unauthorized, redirecting to login");
+        navigate('/login');
+      } else {
+        console.log("Error:", error);
+      }
+    });
+    
 
   }, []);
 

@@ -26,8 +26,9 @@ exports.getProductById = async (req, res) => {
 };
 
 exports.createProduct = async (req, res) => {
+  console.log(req.body);
   try {
-    const { title, description, code, price, stock, thumbnails } = req.body;
+    const { title, description, code, price, stock, thumbnails } = req.body.formData;
     let { status } = req.body;
 
     // Validación de campos requeridos

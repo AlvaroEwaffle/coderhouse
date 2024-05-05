@@ -3,15 +3,14 @@ const cors = require('cors'); // Import the cors middleware
 const mongoose = require('mongoose');
 const passport = require('passport');
 const initializePassport = require('./utils/passport.config');
-const session = require('express-session');
 
 const productsRouter = require('./routes/products');
 const cartsRouter = require('./routes/carts');
 const sessionRouter = require('./routes/sessions')
-const sessionMiddleware = require('./session/mongoStorage')
+
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
+const session = require('express-session');
 
 const app = express();
 const port = process.env.PORT || 8080;
@@ -26,23 +25,19 @@ app.use(cors({
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(sessionMiddleware);
 app.use(cookieParser());
 app.use(bodyParser.json());
 
-// Configurar la sesión
 app.use(session({
-  secret: 'your_secret_key',
+  secret: 'your_secret_key', // Replace 'your_secret_key' with a secret string for session encryption
   resave: false,
   saveUninitialized: false
 }));
 
-// Inicializar Passport
-initializePassport();
-
 // Add Passport middleware
+initializePassport();
 app.use(passport.initialize());
-app.use(passport.session());
+
 
 // Rutas
 app.use('/api/products', productsRouter);

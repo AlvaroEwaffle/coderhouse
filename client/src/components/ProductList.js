@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import validateSession from '../utils/validatesession.js'; 
+import { ToastContainer, toast } from 'react-toastify';
 
 
 const ProductList = () => {
   const [name, setName] = useState('');
   const [usertype, setUsertype] = useState('');
   const [products, setProducts] = useState([]);
-  const [carts, setCarts] = useState([]);
+  const [userCart, setUserCart] = useState('');
   const [selectedCart, setSelectedCart] = useState('');
   const [pagination, setPagination] = useState({});
   const [filters, setFilters] = useState({});
@@ -16,9 +16,27 @@ const ProductList = () => {
   axios.defaults.withCredentials = true;
 
   useEffect(() => {
-    validateSession(setName, setUsertype, navigate);
-    fetchProducts();
-    fetchCarts();
+    axios.get('http://localhost:8080/api/sessions/current')
+      .then(response => {
+        console.log("Validate Session Response Data:", response.data);
+        if (response.data.role) {
+          setName(response.data.email);
+          setUsertype(response.data.role);
+          setUserCart(response.data.cart);
+          fetchProducts();
+        } else {
+          console.log("Usuario sin rol?");
+          navigate('/login');
+        }
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 401) {
+          console.log("Unauthorized, redirecting to login");
+          navigate('/login');
+        } else {
+          console.log("Error:", error);
+        }
+      });
   }, [filters]); // Fetch products when filters change
 
   const fetchProducts = async () => {
@@ -42,25 +60,14 @@ const ProductList = () => {
     }
   };
 
-  const fetchCarts = async () => {
-    try {
-      const response = await fetch('http://localhost:8080/api/carts');
-      const data = await response.json();
-      setCarts(data);
-    } catch (error) {
-      console.error('Error fetching carts:', error);
-    }
-  };
-
   const handleAddToCart = async (productId) => {
-
     try {
       const response = await fetch(`http://localhost:8080/api/carts/${selectedCart}/product/${productId}`, {
         method: 'POST',
       });
       if (response.ok) {
-        // If the product is successfully added to the cart, update the cart list
-        fetchCarts();
+        // If the product is successfully added to the cart, toast message
+        toast.success(`Product ${productId} added to cart ${selectedCart}`)
       } else {
         console.error('Failed to add product to cart:', response.statusText);
       }
@@ -127,7 +134,7 @@ const ProductList = () => {
 
   return (
     <div>
-      <h1>Products Page: {name} Rol: {usertype}</h1>
+      <h1>Products Page: {name}  Rol: {usertype} Cart: {userCart}</h1>
       {/* Filter Form */}
       <form onSubmit={handleSubmit}>
         <input type="text" name="title" placeholder="Title" />
@@ -145,16 +152,13 @@ const ProductList = () => {
             <p>Price: ${product.price}</p>
             {/* Add more product information here as needed */}
             <button onClick={() => handleAddToCart(product._id)}>Add to Cart</button>
+
             <select onChange={(e) => setSelectedCart(e.target.value)}>
               <option value="">Select Cart</option>
-              {carts.map((cart) => (
-                <option key={cart._id} value={cart._id}>{`Cart ${cart._id}`}</option>
-              ))}
+              <option key={userCart} value={userCart}>{`Cart ${userCart}`}</option>
             </select>
           </div>
         ))}
-
-
       </div>
 
       {/* Pagination Controls */}

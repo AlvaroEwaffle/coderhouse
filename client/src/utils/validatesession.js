@@ -3,19 +3,24 @@ import axios from 'axios';
 
 const validateSession = (setName, setUsertype, navigate) => {
   axios.defaults.withCredentials = true;
-  axios.post('http://localhost:8080/api/sessions/validate')
+  axios.get('http://localhost:8080/api/sessions/current')
     .then(response => {
-      console.log("Validate Session Response Data:",response.data.userType);
-      if (response.data) {
-        setName(response.data.user);
-        setUsertype(response.data.userType);
+      console.log("Validate Session Response Data:", response.data);
+      if (response.data.role) {
+        setName(response.data.email);
+        setUsertype(response.data.role);
       } else {
-        console.log("No hay sesión activa");
+        console.log("Usuario sin rol?");
         navigate('/login');
       }
     })
     .catch(error => {
-      console.log(error);
+      if (error.response && error.response.status === 401) {
+        console.log("Unauthorized, redirecting to login");
+        navigate('/login');
+      } else {
+        console.log("Error:", error);
+      }
     });
 };
 
