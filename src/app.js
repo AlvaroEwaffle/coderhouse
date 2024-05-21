@@ -3,6 +3,8 @@ const cors = require('cors'); // Import the cors middleware
 const mongoose = require('mongoose');
 const passport = require('passport');
 const initializePassport = require('./utils/passport.config');
+const dotenv = require('dotenv');
+
 
 const productsRouter = require('./routes/products');
 const cartsRouter = require('./routes/carts');
@@ -14,6 +16,9 @@ const session = require('express-session');
 
 const app = express();
 const port = process.env.PORT || 8080;
+
+dotenv.config();
+
 
 // Middleware
 app.use(cors({
@@ -47,7 +52,8 @@ app.use('/api/sessions', sessionRouter);
 //This will provide a refresh_token which can be used to request an updated access token when this access token expires.
 
 //Connect to mongodb
-mongoose.connect('mongodb+srv://alvaro:8PWQQG372stpjA1w@ecommerce.jlrgk9q.mongodb.net/?retryWrites=true&w=majority&appName=ecommerce', {
+const DB_URI = process.env.MONGO_DB
+mongoose.connect(DB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })

@@ -6,7 +6,7 @@ const schema = new mongoose.Schema({
     age: Number,
     email: {
         type: String,
-        unique: false
+    
     },
     password: String,
     role: { type: String, default: 'user' },

@@ -1,11 +1,11 @@
 const { Router } = require('express')
-const User = require('../dao/models/User.Model')
-const Cart = require('../dao/models/Carts.Model')
+const User = require('../dao/models/User.Model.js')
+const Cart = require('../dao/models/Carts.Model.js')
 const router = Router()
 const jwt = require('jsonwebtoken');
 const { hashPassword, isValidPassword } = require('../utils/bcrypt.js')
 const passport = require("passport");
-const { generateToken } = require('../utils/jwt')
+const { generateToken } = require('../utils/jwt.js')
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;

@@ -1,6 +1,6 @@
 const passport = require('passport')
 const { Strategy, ExtractJwt } = require('passport-jwt')
-const { secret } = require('../utils/jwt')
+const { secret } = require('./jwt.js')
 const GitHubStrategy = require('passport-github2').Strategy;
 const User = require('../dao/models/User.Model.js'); // Assuming you have a User model
 
