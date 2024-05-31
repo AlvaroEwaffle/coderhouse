@@ -4,11 +4,12 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const initializePassport = require('./utils/passport.config');
 const dotenv = require('dotenv');
+dotenv.config();
 
-
-const productsRouter = require('./routes/products');
-const cartsRouter = require('./routes/carts');
-const sessionRouter = require('./routes/sessions')
+const productsRouter = require('./routes/ProductsRoutes');
+const cartsRouter = require('./routes/CartsRoutes');
+//const sessionRouter = require('./routes/sessions')
+const authRoutes = require('./routes/AuthRoutes');
 
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -16,9 +17,6 @@ const session = require('express-session');
 
 const app = express();
 const port = process.env.PORT || 8080;
-
-dotenv.config();
-
 
 // Middleware
 app.use(cors({
@@ -47,7 +45,8 @@ app.use(passport.initialize());
 // Rutas
 app.use('/api/products', productsRouter);
 app.use('/api/carts', cartsRouter);
-app.use('/api/sessions', sessionRouter);
+//OLD app.use('/api/sessions', sessionRouter);
+app.use('/api/sessions', authRoutes);
 //localhost:8080/api/sessions/githubcallback
 //This will provide a refresh_token which can be used to request an updated access token when this access token expires.
 

@@ -1,12 +1,13 @@
 const { Router } = require('express')
-const User = require('../dao/models/User.Model.js')
-const Cart = require('../dao/models/Carts.Model.js')
+const User = require('../dao/mongo_dao/UsersDAO.js')
+const Cart = require('../dao/mongo_dao/CartsDAO.js')
 const router = Router()
 const jwt = require('jsonwebtoken');
 const { hashPassword, isValidPassword } = require('../utils/bcrypt.js')
 const passport = require("passport");
 const { generateToken } = require('../utils/jwt.js')
 
+//Login
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -37,6 +38,7 @@ router.post('/login', async (req, res) => {
     }
 });
 
+//Create New User
 router.post('/register', async (req, res) => {
     const { firstName, lastName, email, age, password } = req.body;
 
@@ -86,12 +88,10 @@ router.get('/github/callback', passport.authenticate('github', { failureRedirect
 
 });
 
-
 //router.get('/current', verifyToken, (req, res) => {
 router.get('/current', passport.authenticate('jwt', { session: false }), async (req, res) => {
     return res.json(req.user)
 });
-
 
 // Logout route
 router.get('/logout', (req, res) => {

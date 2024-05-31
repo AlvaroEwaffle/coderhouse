@@ -1,5 +1,5 @@
-const Cart = require('../models/Carts.Model.js');
-const Product = require('../models/Products.Model.js');
+const Cart = require('../../models/Carts.Model.js');
+const Product = require('../../models/Products.Model.js');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 // Controladores
