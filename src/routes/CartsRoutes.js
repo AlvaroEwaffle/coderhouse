@@ -4,7 +4,7 @@ const CartService = require('../services/CartsService');
 const passport = require('passport');
 
 // Rutas
-router.get('/', passport.authenticate('jwt', { session: false }), CartService.getUserCart);
+router.get('/',  CartService.getUserCart);
 router.post('/:cid/purchase', passport.authenticate('jwt', { session: false }), CartService.purchaseCart);
 //router.get('/', CartService.getAvailableCarts);
 router.get('/:cid', CartService.getCartById);

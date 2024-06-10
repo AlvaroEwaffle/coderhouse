@@ -1,5 +1,6 @@
 // controllers/cartController.js
 const CartService = require('../repositories/CartRepository');
+const TicketService = require('../services/TicketService');
 
 exports.createCart = async (req, res) => {
     try {
@@ -39,7 +40,8 @@ exports.getUserCart = async (req, res) => {
 
 exports.purchaseCart = async (req, res) => {
     try {
-        const purchaseResult = await CartService.purchaseCart(req);
+        console.log(req.user)
+        const purchaseResult = await TicketService.createTicket(req.user);
         res.status(200).json(purchaseResult);
     } catch (error) {
         console.error('Error purchasing cart:', error);
@@ -49,8 +51,9 @@ exports.purchaseCart = async (req, res) => {
 
 exports.addProductToCart = async (req, res) => {
     try {
-        const { cartId, productId, quantity } = req.params;
-        const updatedCart = await CartService.addProductToCart(cartId, productId, quantity);
+        const { cid, pid } = req.params;
+        console.log(cid, pid)
+        const updatedCart = await CartService.addProductToCart(cid, pid, 1);
         res.status(200).json(updatedCart);
     } catch (error) {
         console.error('Error adding product to cart:', error);
