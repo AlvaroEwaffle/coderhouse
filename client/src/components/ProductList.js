@@ -12,6 +12,7 @@ const ProductList = () => {
   const [selectedCart, setSelectedCart] = useState('');
   const [pagination, setPagination] = useState({});
   const [filters, setFilters] = useState({});
+  const [ticket, setTicket] = useState(null);
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
 
@@ -132,6 +133,16 @@ const ProductList = () => {
     }
   };
 
+  const handlePurchase = async (cartID) => {
+    try {
+        const response = await axios.post('http://localhost:8080/api/carts/${cartID}/purchase');
+        setTicket(response.data);
+        toast.success(`Purchase ticket generated.`)
+    } catch (err) {
+        console.error(err);
+    }
+};
+
   return (
     <div>
       <h1>Products Page: {name}  Rol: {usertype} Cart: {userCart}</h1>
@@ -143,16 +154,28 @@ const ProductList = () => {
         <button type="submit">Apply Filters</button>
       </form>
 
+      {/* Ticket Details */}
+      <div>
+            <button onClick={() => handlePurchase(userCart)}>Purchase</button>
+            {ticket && (
+                <div>
+                    <h3>Ticket Details</h3>
+                    <p>Code: {ticket.code}</p>
+                    <p>Purchase Date: {new Date(ticket.purchase_datetime).toLocaleString()}</p>
+                    <p>Amount: ${ticket.amount.toFixed(2)}</p>
+                    <p>Purchaser: {ticket.purchaser}</p>
+                </div>
+            )}
+        </div>
       {/* Product List */}
       <div>
         {products.map(product => (
-          <div key={product._id}>
+          <div key={product.id}>
             <h2>{product.title}</h2>
             <p>Description: {product.description}</p>
             <p>Price: ${product.price}</p>
             {/* Add more product information here as needed */}
-            <button onClick={() => handleAddToCart(product._id)}>Add to Cart</button>
-
+            <button onClick={() => handleAddToCart(product.id)}>Add to Cart</button>
             <select onChange={(e) => setSelectedCart(e.target.value)}>
               <option value="">Select Cart</option>
               <option key={userCart} value={userCart}>{`Cart ${userCart}`}</option>

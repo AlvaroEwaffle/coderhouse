@@ -56,11 +56,11 @@ const LeftSidebar = () => {
             <Link to="/productlist">Product List</Link>
           </li>
         )}
-        {usertype && (
+        {/* {usertype && (
           <li>
             <Link to="/carts">Cart List</Link>
           </li>
-        )}
+        )} */}
         {usertype && (
           <li>
             <button onClick={handleLogout}>Logout</button>
